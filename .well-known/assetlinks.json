@@ -1,0 +1,9 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "it.emplate.aska.debug",
+    "sha256_cert_fingerprints":
+    ["91:15:02:99:90:A3:72:1B:98:AA:A5:2D:A8:5D:24:BC:3C:44:6C:BB:1E:6F:49:46:B5:10:92:2E:46:43:4E:10"]
+  }
+}]
