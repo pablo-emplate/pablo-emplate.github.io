@@ -86,13 +86,12 @@ class Player {
     this.targetY = 0
 
     // for debug
-    //this.group.color = color(0, 0, 0, 0)
-    //this.group.visible = false
+    this.group.visible = false
 
   }
 
   overlap(target) {
-    this.sensor.overlaps(target, (a, b) => {
+    this.sensor.overlap(target, (a, b) => {
       score.add(b.collectableValue)
       if (b.collectableValue > 0) {
         this.collectedArray[this.collected] = createVector(30 + random(-20, 20), -15 + random(-10, 5))
