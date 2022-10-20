@@ -26,7 +26,7 @@ function setup() {
 function draw() {
   clear()
   background(129, 198, 214, 255)
-  image(backgroundImage, -backgroundImage.width / 2 + windowWidth / 2, 0);
+  image(backgroundImage, -backgroundImage.width / 2 + windowWidth / 2, -backgroundImage.height / 2 + windowHeight / 2);
   intro()
 
   //drop stuff
