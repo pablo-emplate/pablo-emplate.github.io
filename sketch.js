@@ -1,7 +1,7 @@
 
 let player, score, collectableGroup, bottom
 let xoff = 0.0
-let gameDuration = 60 * 60 * 1
+let gameDuration = 60 * 60 * 0.6
 
 function setup() {
   createCanvas(windowWidth, windowHeight + 100);
@@ -158,7 +158,15 @@ class Score {
 class Collectable {
   constructor(group, value) {
     let imageSource = (value == 1) ? collectableImageP : collectableImageN
-    xoff = xoff + 0.4;
+    let xdeviation = 0.2
+    if (frameCount > (gameDuration * 0.7)) {
+      xdeviation = 0.5
+    } else if(frameCount > (gameDuration * 0.5)) {
+      xdeviation = 0.3
+    } 
+    
+    print(xdeviation)
+    xoff = xoff + xdeviation;
     let perlin = noise(xoff) * width;
     this.sprite = new Sprite(imageSource, perlin, -20)
     this.sprite.vel.y = 10
@@ -170,6 +178,9 @@ class Collectable {
 function touchStarted () {
   if (!fullscreen()) {
     fullscreen(true);
+  }
+  if(frameCount > gameDuration){
+    window.location.reload()
   }
 }
 
