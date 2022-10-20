@@ -4,7 +4,7 @@ let xoff = 0.0
 let gameDuration = 60 * 60 * 1
 
 function setup() {
-  createCanvas(windowWidth, windowHeight);
+  createCanvas(windowWidth, windowHeight + 300);
   frameRate(60);
 
   collectableGroup = new Group();
