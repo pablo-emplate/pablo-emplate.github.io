@@ -4,7 +4,7 @@ let xoff = 0.0
 let gameDuration = 60 * 60 * 0.6
 
 function setup() {
-  createCanvas(windowWidth, windowHeight + 100);
+  createCanvas(windowWidth, windowHeight);
   frameRate(60);
 
   collectableGroup = new Group();
@@ -13,20 +13,20 @@ function setup() {
   collectableImageN = loadImage('assets/ball_n.png');
   backgroundImage = loadImage('assets/bg.png');
 
-  if(windowHeight > 700 + 100) {
-    bottom = 700 
+  if (windowHeight > 700 + 100) {
+    bottom = 700
   } else {
-    bottom = windowHeight - 100
+    bottom = windowHeight - 130
   }
 
-  player = new Player(0, 0)
+  player = new Player(windowWidth / 2, bottom)
   score = new Score()
 }
 
 function draw() {
   clear()
-  background(129,198,214,255)
-  image(backgroundImage, -backgroundImage.width / 2 + windowWidth/2, 0);
+  background(129, 198, 214, 255)
+  image(backgroundImage, -backgroundImage.width / 2 + windowWidth / 2, 0);
   intro()
 
   //drop stuff
@@ -51,15 +51,15 @@ function intro() {
   textAlign(CENTER);
   fill(255, 255, 255);
   if (frameCount < 2 * 60) {
-    text("3", width/2, height/2);
+    text("3", width / 2, height / 2);
   } else if (frameCount < 3 * 60) {
-    text('2', width/2, height/2);
+    text('2', width / 2, height / 2);
   } else if (frameCount < 4 * 60) {
-    text('1', width/2, height/2);
+    text('1', width / 2, height / 2);
   } else if (frameCount < 6 * 60) {
-    text('Emplate it!', width/2, height/2);
+    text('Emplate it!', width / 2, height / 2);
   } else if (frameCount > gameDuration) {
-    text('Score ' + score.points, width/2, height/2);
+    text('Score ' + score.points, width / 2, height / 2);
   }
 }
 
@@ -159,12 +159,12 @@ class Collectable {
   constructor(group, value) {
     let imageSource = (value == 1) ? collectableImageP : collectableImageN
     let xdeviation = 0.2
-    if (frameCount > (gameDuration * 0.7)) {
+    if (frameCount > gameDuration * 0.7) {
       xdeviation = 0.5
-    } else if(frameCount > (gameDuration * 0.5)) {
+    } else if (frameCount > gameDuration * 0.5) {
       xdeviation = 0.3
-    } 
-    
+    }
+
     print(xdeviation)
     xoff = xoff + xdeviation;
     let perlin = noise(xoff) * width;
@@ -175,11 +175,13 @@ class Collectable {
   }
 }
 
-function touchStarted () {
+function touchStarted() {
+  /*
   if (!fullscreen()) {
     fullscreen(true);
   }
-  if(frameCount > gameDuration){
+  */
+  if (frameCount > gameDuration) {
     window.location.reload()
   }
 }
@@ -188,6 +190,6 @@ function touchStarted () {
  * touch events, like swiping left for "back" or scrolling
  * the page.
  */
-document.ontouchmove = function(event) {
+document.ontouchmove = function (event) {
   event.preventDefault();
 };
