@@ -1,6 +1,7 @@
 
 let player, score, collectableGroup, bottom
 let xoff = 0.0
+let gameDuration = 60 * 60 * 1
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -29,7 +30,7 @@ function draw() {
   intro()
 
   //drop stuff
-  if (frameCount > 7 * 60) {
+  if (frameCount > 7 * 60 && frameCount < gameDuration) {
     if (frameCount % 40 == 0) {
       new Collectable(collectableGroup, 1)
     }
@@ -57,6 +58,8 @@ function intro() {
     text('1', width/2, height/2);
   } else if (frameCount < 6 * 60) {
     text('Emplate it!', width/2, height/2);
+  } else if (frameCount > gameDuration) {
+    text('Score ' + score.points, width/2, height/2);
   }
 }
 
