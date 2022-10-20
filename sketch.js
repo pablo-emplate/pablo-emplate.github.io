@@ -4,7 +4,7 @@ let xoff = 0.0
 let gameDuration = 60 * 60 * 1
 
 function setup() {
-  createCanvas(windowWidth, windowHeight + 300);
+  createCanvas(windowWidth, windowHeight + 100);
   frameRate(60);
 
   collectableGroup = new Group();
@@ -173,4 +173,10 @@ function touchStarted () {
   }
 }
 
-
+/* prevents the mobile browser from processing some default
+ * touch events, like swiping left for "back" or scrolling
+ * the page.
+ */
+document.ontouchmove = function(event) {
+  event.preventDefault();
+};
