@@ -1,10 +1,8 @@
 
-let player, score, collectableGroup
+let player, score, collectableGroup, bottom
 let xoff = 0.0
 
 function setup() {
-
-  createCanvas(600, 900);
   fullscreen()
   resizeCanvas(windowWidth, windowHeight);
   frameRate(60);
@@ -17,6 +15,11 @@ function setup() {
 
   player = new Player(0, 0)
   score = new Score()
+  if(windowHeight > 700 + 100) {
+    bottom = 700 
+  } else {
+    bottom = windowHeight - 100
+  }
 }
 
 function draw() {
@@ -40,18 +43,6 @@ function draw() {
     }
   }
 }
-
-function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
-}
-
-/* prevents the mobile browser from processing some default
- * touch events, like swiping left for "back" or scrolling
- * the page.
- */
-document.ontouchmove = function(event) {
-  event.preventDefault();
-};
 
 function intro() {
   textSize(50);
@@ -122,7 +113,7 @@ class Player {
     }
 
     if (mouse.isOnCanvas) {
-      this.group.moveTowards(mouse.x, 700 - dy);
+      this.group.moveTowards(mouse.x, bottom - dy);
     }
 
     // player sprite
@@ -172,3 +163,21 @@ class Collectable {
     group.add(this.sprite)
   }
 }
+
+function touchStarted () {
+  if (!fullscreen()) {
+    fullscreen(true);
+  }
+}
+
+/* full screening will change the size of the canvas */
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+}
+
+/* prevents the mobile browser from processing some default
+ * touch events, like swiping left for "back" or scrolling the page.
+ */
+document.ontouchmove = function(event) {
+    event.preventDefault();
+};
