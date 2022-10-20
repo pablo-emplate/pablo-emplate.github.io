@@ -13,12 +13,7 @@ function setup() {
   collectableImageN = loadImage('assets/ball_n.png');
   backgroundImage = loadImage('assets/bg.png');
 
-  if (windowHeight > 700 + 100) {
-    bottom = 700
-  } else {
-    bottom = windowHeight - 130
-  }
-
+  bottom = windowHeight - windowHeight/4
   player = new Player(windowWidth / 2, bottom)
   score = new Score()
 }
