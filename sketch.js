@@ -3,8 +3,7 @@ let player, score, collectableGroup, bottom
 let xoff = 0.0
 
 function setup() {
-  fullscreen()
-  resizeCanvas(windowWidth, windowHeight);
+  createCanvas(windowWidth, windowHeight);
   frameRate(60);
 
   collectableGroup = new Group();
@@ -13,13 +12,14 @@ function setup() {
   collectableImageN = loadImage('assets/ball_n.png');
   backgroundImage = loadImage('assets/bg.png');
 
-  player = new Player(0, 0)
-  score = new Score()
   if(windowHeight > 700 + 100) {
     bottom = 700 
   } else {
     bottom = windowHeight - 100
   }
+
+  player = new Player(0, 0)
+  score = new Score()
 }
 
 function draw() {
@@ -27,10 +27,6 @@ function draw() {
   background(129,198,214,255)
   image(backgroundImage, -backgroundImage.width / 2 + windowWidth/2, 0);
   intro()
-
-  player.update()
-  player.overlap(collectableGroup)
-  score.update()
 
   //drop stuff
   if (frameCount > 7 * 60) {
@@ -42,6 +38,11 @@ function draw() {
       new Collectable(collectableGroup, -1)
     }
   }
+
+  player.update()
+  player.overlap(collectableGroup)
+  score.update()
+
 }
 
 function intro() {
@@ -82,8 +83,8 @@ class Player {
     this.targetY = 0
 
     // for debug
-    this.group.color = color(0, 0, 0, 0)
-    this.group.visible = false
+    //this.group.color = color(0, 0, 0, 0)
+    //this.group.visible = false
 
   }
 
@@ -118,7 +119,7 @@ class Player {
 
     // player sprite
     push()
-    image(this.shadow, this.sensor.x - this.bowl.width / 2, 780)
+    image(this.shadow, this.sensor.x - this.bowl.width / 2, bottom + 80)
     translate(this.sensor.x - this.bowl.width / 2, this.sensor.y - this.bowl.height / 2)
     rotate(this.sensor.vel.x / 1.5)
     for (let i = 0; i < this.collected; i++) {
@@ -170,14 +171,4 @@ function touchStarted () {
   }
 }
 
-/* full screening will change the size of the canvas */
-function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
-}
 
-/* prevents the mobile browser from processing some default
- * touch events, like swiping left for "back" or scrolling the page.
- */
-document.ontouchmove = function(event) {
-    event.preventDefault();
-};
