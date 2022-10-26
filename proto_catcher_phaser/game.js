@@ -39,8 +39,8 @@ function create() {
 		bowl,
 		this.ballGroup,
 		function (bowl, collectable) {
+			bowl.collision(collectable.body.position)
 			collectable.disableBody(true, true)
-			bowl.collision()
 		},
 		null,
 		this
@@ -65,7 +65,11 @@ class Bowl extends Phaser.GameObjects.Sprite {
 		//
 		this.shadow = scene.add.sprite(this.x, this.y + 80, 'shadow')
 		this.shadow.setDepth(5)
+		//
+
 		scene.add.existing(this);
+		// 
+		this.collectables = this.scene.add.group()
 	}
 
 	update() {
@@ -82,7 +86,6 @@ class Bowl extends Phaser.GameObjects.Sprite {
 			ease: 'Power2'
 		});
 
-
 		if (this.y > settings.h - settings.bottom + settings.bounce - 5) {
 			this.scene.tweens.add({
 				targets: this,
@@ -92,16 +95,25 @@ class Bowl extends Phaser.GameObjects.Sprite {
 		}
 
 		// hacky but tweens dont affect velocity
-		let rotation = parseInt(this.body.position.x - this.prevPosition) / 2
-		console.log(rotation)
+		let rotation = parseInt(this.body.position.x - this.prevPosition)
 		this.prevPosition = this.body.position.x
-		this.angle = rotation
+		this.angle = Math.max(Math.min(rotation, 10), -10)
 
 		// update attached sprites
 		this.shadow.x = this.x
+		this.collectables.children.each(function(collectable) {
+			collectable.x = this.x - collectable.deviation/4
+			collectable.y = this.y - 30
+		  }, this);
 	}
 
-	collision() {
+	collision(position) {
+		console.log(position.x + " - " + this.body.position.x)
+		let c = this.scene.add.sprite(position.x, position.y, 'ballP')
+		c.deviation = this.x - position.x
+		c.setDepth(4)
+		this.collectables.add(c)
+
 		let particle = this.scene.add.particles('particle');
 		particle.setDepth(1);
 		this.scene.add.existing(particle);
