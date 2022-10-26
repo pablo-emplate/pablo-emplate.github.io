@@ -3,9 +3,9 @@ const gameState = {
 }
 
 const settings = {
-	h: window.innerHeight * (1000 / window.innerHeight),
-	w: window.innerWidth * (1000 / window.innerHeight),
-	bottom: 150,
+	h: window.innerHeight * (800 / window.innerHeight),
+	w: window.innerWidth * (800 / window.innerHeight),
+	bottom: 200,
 	bounce: 40
 }
 
@@ -15,6 +15,7 @@ function preload() {
 	this.load.image('ballN', 'assets/ball_n.png');
 	this.load.image('background', 'assets/bg.png');
 	this.load.image('particle', 'assets/particle.png');
+	this.load.image('shadow', 'assets/shadow.png');
 }
 
 function create() {
@@ -56,14 +57,24 @@ function preUpdate(time, delta) {
 class Bowl extends Phaser.GameObjects.Sprite {
 	constructor(scene, x, y) {
 		super(scene, settings.w / 2, settings.h - settings.bottom, 'bowl');
-		scene.physics.world.enable(this);
-		scene.add.existing(this);
+		scene.physics.world.enable(this)
 		this.body.setAllowGravity(false)
+		this.body.moves = false
 		this.setDepth(5)
+
+		//
+		this.shadow = scene.add.sprite(this.x, this.y + 80, 'shadow')
+		this.shadow.setDepth(5)
+		scene.add.existing(this);
+	}
+
+	update() {
+
 	}
 
 	preUpdate(time, delta) {
 		super.preUpdate(time, delta)
+
 		this.scene.tweens.add({
 			targets: this,
 			x: this.scene.input.x,
@@ -71,11 +82,6 @@ class Bowl extends Phaser.GameObjects.Sprite {
 			ease: 'Power2'
 		});
 
-		this.scene.tweens.add({
-			targets: this,
-			angle: this.body.velocity.x * 10,
-			duration: 100
-		});
 
 		if (this.y > settings.h - settings.bottom + settings.bounce - 5) {
 			this.scene.tweens.add({
@@ -84,6 +90,15 @@ class Bowl extends Phaser.GameObjects.Sprite {
 				duration: 150
 			});
 		}
+
+		// hacky but tweens dont affect velocity
+		let rotation = parseInt(this.body.position.x - this.prevPosition) / 2
+		console.log(rotation)
+		this.prevPosition = this.body.position.x
+		this.angle = rotation
+
+		// update attached sprites
+		this.shadow.x = this.x
 	}
 
 	collision() {
@@ -91,7 +106,7 @@ class Bowl extends Phaser.GameObjects.Sprite {
 		particle.setDepth(1);
 		this.scene.add.existing(particle);
 
-		let text = this.scene.add.text(this.x, this.y, '+1', { font: '20px Courier', fill: '#ffffff' });
+		let text = this.scene.add.text(this.x, this.y, '+1', { font: '30px Courier', color: '#ffffff', align: 'center' });
 		this.scene.physics.world.enable(text)
 		text.body.velocity.y = -350
 		this.scene.time.delayedCall(600, text.destroy, [], text);
