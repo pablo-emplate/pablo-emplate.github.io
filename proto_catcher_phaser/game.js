@@ -3,8 +3,8 @@ const gameState = {
 }
 
 const settings = {
-	h: window.innerHeight,
-	w: window.innerWidth,
+	h: window.innerHeight * (1000 / window.innerHeight),
+	w: window.innerWidth * (1000 / window.innerHeight),
 	bottom: 150,
 	bounce: 40
 }
@@ -116,7 +116,7 @@ class Bowl extends Phaser.GameObjects.Sprite {
 
 const config = {
 	scale: {
-		mode: Phaser.Scale.NONE,
+		mode: Phaser.Scale.FIT,
 		autoCenter: Phaser.Scale.CENTER_BOTH,
 		width: settings.w,
 		height: settings.h,
