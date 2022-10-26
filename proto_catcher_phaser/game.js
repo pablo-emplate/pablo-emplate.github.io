@@ -3,9 +3,9 @@ const gameState = {
 }
 
 const settings = {
-	h: 1200,
-	w: 1200,
-	bottom: 250,
+	h: window.innerHeight,
+	w: window.innerWidth,
+	bottom: 150,
 	bounce: 40
 }
 
@@ -115,11 +115,11 @@ class Bowl extends Phaser.GameObjects.Sprite {
 }
 
 const config = {
-	type: Phaser.AUTO,
 	scale: {
-		mode: Phaser.Scale.FIT,
+		mode: Phaser.Scale.NONE,
 		autoCenter: Phaser.Scale.CENTER_BOTH,
-		height: settings.h
+		width: settings.w,
+		height: settings.h,
 	},
 	backgroundColor: "81C6D6",
 	physics: {
