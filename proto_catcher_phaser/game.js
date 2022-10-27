@@ -19,6 +19,8 @@ function preload() {
 	this.load.image('shadow', 'assets/shadow.png');
 }
 
+var score
+
 function create() {
 	let bowl = new Bowl(this)
 	this.add.image(settings.w / 2, settings.h / 2, 'background')
@@ -36,13 +38,13 @@ function create() {
 	});
 
 	this.time.addEvent({
-		delay: 4200,
+		delay: 2200,
 		callbackScope: this,
 		callback: function () {
 			let ball = new Ball(this, settings.w / 2 - settings.gameArea/2 + Math.random() * settings.gameArea, 0, -1)
 			this.ballGroup.add(ball)
 		},
-		repeat: 20
+		repeat: 15
 	});
 
 	// define collision
@@ -55,11 +57,11 @@ function create() {
 	);
 
 	// score
-	this.scene.add.text(150,150, gameState.score, { fontSize: '40px', color: '#ffffff', align: 'left' });
+	score = this.add.text(50,50, gameState.score, { fontSize: '40px', color: '#ffffff', align: 'left' });
 }
 
 function update() {
-
+	score.text = gameState.score
 }
 
 function preUpdate(time, delta) {
@@ -89,7 +91,7 @@ class Bowl extends Phaser.Physics.Arcade.Sprite {
 		scene.physics.world.enable(this)
 
 		this.body.setAllowGravity(false)
-		this.body.moves = false
+		//this.body.moves = false
 		this.setDepth(5)
 
 		//
@@ -107,12 +109,7 @@ class Bowl extends Phaser.Physics.Arcade.Sprite {
 	preUpdate(time, delta) {
 		super.preUpdate(time, delta)
 
-		this.scene.tweens.add({
-			targets: this,
-			x: this.scene.input.x,
-			duration: 600,
-			ease: 'Power2'
-		});
+		this.scene.physics.moveTo(this, this.scene.input.x, this.y, 500, 100);
 
 		if (this.y > settings.h - settings.bottom + settings.bounce - 5) {
 			this.scene.tweens.add({
@@ -136,6 +133,7 @@ class Bowl extends Phaser.Physics.Arcade.Sprite {
 	}
 
 	collision(collectable) {
+		gameState.score += collectable.value
 		if (collectable.y > this.y) {
 			return
 		}
