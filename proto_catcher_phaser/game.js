@@ -109,7 +109,7 @@ class Bowl extends Phaser.Physics.Arcade.Sprite {
 	preUpdate(time, delta) {
 		super.preUpdate(time, delta)
 
-		this.scene.physics.moveTo(this, this.scene.input.x, this.y, 500, 100);
+		this.scene.physics.moveTo(this, this.scene.input.x, this.y, 500, 70);
 
 		if (this.y > settings.h - settings.bottom + settings.bounce - 5) {
 			this.scene.tweens.add({
