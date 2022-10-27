@@ -6,7 +6,8 @@ const settings = {
 	h: window.innerHeight * (800 / window.innerHeight),
 	w: window.innerWidth * (800 / window.innerHeight),
 	bottom: 200,
-	bounce: 40
+	bounce: 40,
+	gameArea: 400
 }
 
 function preload() {
@@ -25,26 +26,36 @@ function create() {
 	// create collectables
 	this.ballGroup = this.add.group()
 	this.time.addEvent({
-		delay: 1500,
+		delay: 500,
 		callbackScope: this,
 		callback: function () {
-			let ball = this.physics.add.sprite(Math.random() * settings.w, 0, 'ballP')
+			let ball = new Ball(this, settings.w / 2 - settings.gameArea/2 + Math.random() * settings.gameArea, 0, 1)
 			this.ballGroup.add(ball)
 		},
-		repeat: 500
+		repeat: 100
+	});
+
+	this.time.addEvent({
+		delay: 4200,
+		callbackScope: this,
+		callback: function () {
+			let ball = new Ball(this, settings.w / 2 - settings.gameArea/2 + Math.random() * settings.gameArea, 0, -1)
+			this.ballGroup.add(ball)
+		},
+		repeat: 20
 	});
 
 	// define collision
-	this.physics.add.overlap(
+	this.physics.add.collider(
 		bowl,
 		this.ballGroup,
 		function (bowl, collectable) {
-			bowl.collision(collectable.body.position)
-			collectable.disableBody(true, true)
-		},
-		null,
-		this
+			bowl.collision(collectable)
+		}
 	);
+
+	// score
+	this.scene.add.text(150,150, gameState.score, { fontSize: '40px', color: '#ffffff', align: 'left' });
 }
 
 function update() {
@@ -54,10 +65,29 @@ function update() {
 function preUpdate(time, delta) {
 }
 
-class Bowl extends Phaser.GameObjects.Sprite {
+
+class Ball extends Phaser.Physics.Arcade.Sprite {
+	constructor(scene, x, y, value) {
+		let image = value > 0 ? 'ballP' : 'ballN'
+		super(scene, x, y, image);
+		scene.add.existing(this);
+		scene.physics.world.enable(this)
+
+		this.color = value > 0 ? '#ffffff' : '#FF0000'
+		this.value = value
+		this.body.setAllowGravity(false)
+		this.body.moves = true
+		this.body.velocity.y = 550
+		this.setDepth(5)
+	}
+}
+
+class Bowl extends Phaser.Physics.Arcade.Sprite {
 	constructor(scene, x, y) {
 		super(scene, settings.w / 2, settings.h - settings.bottom, 'bowl');
+		scene.add.existing(this);
 		scene.physics.world.enable(this)
+
 		this.body.setAllowGravity(false)
 		this.body.moves = false
 		this.setDepth(5)
@@ -65,10 +95,8 @@ class Bowl extends Phaser.GameObjects.Sprite {
 		//
 		this.shadow = scene.add.sprite(this.x, this.y + 80, 'shadow')
 		this.shadow.setDepth(5)
-		//
 
-		scene.add.existing(this);
-		// 
+		//
 		this.collectables = this.scene.add.group()
 	}
 
@@ -101,37 +129,47 @@ class Bowl extends Phaser.GameObjects.Sprite {
 
 		// update attached sprites
 		this.shadow.x = this.x
-		this.collectables.children.each(function(collectable) {
-			collectable.x = this.x - collectable.deviation/4
-			collectable.y = this.y - 30
-		  }, this);
+		this.collectables.children.each(function (collectable) {
+			collectable.x = this.x - collectable.deviation / 4
+			collectable.y = this.y - collectable.deviationY
+		}, this);
 	}
 
-	collision(position) {
-		console.log(position.x + " - " + this.body.position.x)
-		let c = this.scene.add.sprite(position.x, position.y, 'ballP')
-		c.deviation = this.x - position.x
-		c.setDepth(4)
-		this.collectables.add(c)
+	collision(collectable) {
+		if (collectable.y > this.y) {
+			return
+		}
 
-		let particle = this.scene.add.particles('particle');
-		particle.setDepth(1);
-		this.scene.add.existing(particle);
+		if (collectable.value > 0) {
+			let c = this.scene.add.sprite(collectable.x, collectable.y, 'ballP')
+			c.deviation = this.x - collectable.x
+			c.deviationY = Math.random() * 20 + 10
+			c.setDepth(4)
+			this.collectables.add(c)
 
-		let text = this.scene.add.text(this.x, this.y, '+1', { font: '30px Courier', color: '#ffffff', align: 'center' });
-		this.scene.physics.world.enable(text)
-		text.body.velocity.y = -350
-		this.scene.time.delayedCall(600, text.destroy, [], text);
+			let particle = this.scene.add.particles('particle');
+			particle.setDepth(1);
+			this.scene.add.existing(particle);
 
-		particle.createEmitter({
-			lifespan: 250,
-			maxParticles: 30,
-			angle: { min: -25, max: -165 },
-			quantity: 15,
-			speed: { min: 150, max: 500 },
-			scale: { start: 1, end: 0.8 },
-			follow: this
-		});
+			particle.createEmitter({
+				lifespan: 250,
+				maxParticles: 30,
+				angle: { min: -25, max: -165 },
+				quantity: 15,
+				speed: { min: 150, max: 500 },
+				scale: { start: 1, end: 0.8 },
+				follow: this
+			});
+		} else {
+			let text = this.scene.add.text(this.x, this.y, collectable.value, { fontSize: '24px', color: collectable.color, align: 'center' });
+			this.scene.physics.world.enable(text)
+			text.body.velocity.y = -350
+			this.scene.time.delayedCall(600, text.destroy, [], text);
+		}
+
+		collectable.disableBody(true, true)
+
+
 
 		this.scene.tweens.add({
 			targets: this,
