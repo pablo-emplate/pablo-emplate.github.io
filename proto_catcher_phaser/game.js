@@ -4,7 +4,7 @@ class settings {
 	static w = window.innerWidth * this.scale
 	static bottom = this.h / 4
 	static bounce = 40
-	static gameArea = 400 * this.scale
+	static gameArea = 400
 }
 
 function preload() {
