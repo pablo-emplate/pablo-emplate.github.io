@@ -14,6 +14,10 @@ function preload() {
 	this.load.image('background', 'assets/bg.png');
 	this.load.image('particle', 'assets/particle.png');
 	this.load.image('shadow', 'assets/shadow.png');
+	this.load.audio('impact_0', 'assets/impactGlass_medium_000.ogg')
+	this.load.audio('impact_1', 'assets/impactGlass_medium_001.ogg')
+	this.load.audio('impact_2', 'assets/impactGlass_medium_002.ogg')
+	this.load.audio('impact_3', 'assets/impactGlass_medium_003.ogg')	
 }
 
 let score
@@ -145,10 +149,12 @@ class Bowl extends Phaser.Physics.Arcade.Sprite {
 	}
 
 	collision(collectable) {
-		score.add(collectable.value)
 		if (collectable.y > this.y - 35) {
 			return
 		}
+
+		score.add(collectable.value)
+		this.scene.sound.play('impact_' + Math.floor(Math.random() * 4));
 
 		if (collectable.value > 0) {
 			let c = this.scene.add.sprite(collectable.x, collectable.y, 'ballP')
