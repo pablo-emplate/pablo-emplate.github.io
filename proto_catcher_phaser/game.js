@@ -199,16 +199,16 @@ class Bowl extends Phaser.Physics.Arcade.Sprite {
 
 function dynamicBackground(scene) {
 	// terrible mess (prototypeeee)
-	const colors = ['0x41ADC6', '0x70C1D4', '0x1198B8']
+	const colors = ['0x41ADC6', '0x70C1D4']
 	let size = 70
-	let numX = 8
+	let numX = Math.floor(settings.gameArea/size)
 	let numY = 7
 	let margin = 10
 	let x = settings.w / 2 - (size * numX) / 2 - margin * (numX - 1) / 2
 	let y = 150
 	for (let i = 0; i <= numX; i++) {
 		for (let j = 0; j <= numY; j++) {
-			let color = colors[Math.floor(Math.random() * 4)]
+			let color = colors[Math.floor(Math.random() * 3)]
 			if (color != null) {
 				var rE = scene.add.rectangle(x + i * (size + margin), y + j * (size + margin), size, size);
 				rE.setStrokeStyle(2, color)
