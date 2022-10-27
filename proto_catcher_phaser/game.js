@@ -17,14 +17,15 @@ function preload() {
 	this.load.audio('impact_0', 'assets/impactGlass_medium_000.ogg')
 	this.load.audio('impact_1', 'assets/impactGlass_medium_001.ogg')
 	this.load.audio('impact_2', 'assets/impactGlass_medium_002.ogg')
-	this.load.audio('impact_3', 'assets/impactGlass_medium_003.ogg')	
+	this.load.audio('impact_3', 'assets/impactGlass_medium_003.ogg')
 }
 
 let score
 
 function create() {
 	let bowl = new Bowl(this)
-	this.add.image(settings.w / 2, settings.h / 2, 'background')
+	//this.add.image(settings.w / 2, settings.h / 2, 'background')
+	dynamicBackground(this)
 
 	// create collectables
 	this.ballGroup = this.add.group()
@@ -193,6 +194,28 @@ class Bowl extends Phaser.Physics.Arcade.Sprite {
 			y: this.y + settings.bounce,
 			duration: 150
 		});
+	}
+}
+
+function dynamicBackground(scene) {
+	// terrible mess (prototypeeee)
+	const colors = ['0x41ADC6', '0x70C1D4', '0x1198B8']
+	let size = 70
+	let numX = 8
+	let numY = 7
+	let margin = 10
+	let x = settings.w / 2 - (size * numX) / 2 - margin * (numX - 1) / 2
+	let y = 150
+	for (let i = 0; i <= numX; i++) {
+		for (let j = 0; j <= numY; j++) {
+			let color = colors[Math.floor(Math.random() * 4)]
+			if (color != null) {
+				var rE = scene.add.rectangle(x + i * (size + margin), y + j * (size + margin), size, size);
+				rE.setStrokeStyle(2, color)
+			} else {
+				scene.add.rectangle(x + i * (size + margin), y + j * (size + margin), size, size, '0x70C1D4');
+			}
+		}
 	}
 }
 
