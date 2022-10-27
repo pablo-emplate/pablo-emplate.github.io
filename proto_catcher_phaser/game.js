@@ -30,23 +30,14 @@ function create() {
 	// create collectables
 	this.ballGroup = this.add.group()
 	this.time.addEvent({
-		delay: 500,
+		delay: 480,
 		callbackScope: this,
 		callback: function () {
-			let ball = new Ball(this, settings.w / 2 - settings.gameArea / 2 + Math.random() * settings.gameArea, 0, 1)
+			let value = Math.random() * 7 > 1 ? 1 : -1
+			let ball = new Ball(this, settings.w / 2 - settings.gameArea / 2 + Math.random() * settings.gameArea, 0, value)
 			this.ballGroup.add(ball)
 		},
 		repeat: 100
-	});
-
-	this.time.addEvent({
-		delay: 2200,
-		callbackScope: this,
-		callback: function () {
-			let ball = new Ball(this, settings.w / 2 - settings.gameArea / 2 + Math.random() * settings.gameArea, 0, -1)
-			this.ballGroup.add(ball)
-		},
-		repeat: 15
 	});
 
 	// define collision
