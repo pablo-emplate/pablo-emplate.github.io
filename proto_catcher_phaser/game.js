@@ -18,6 +18,7 @@ function preload() {
 	this.load.audio('impact_1', 'assets/impactGlass_medium_001.ogg')
 	this.load.audio('impact_2', 'assets/impactGlass_medium_002.ogg')
 	this.load.audio('impact_3', 'assets/impactGlass_medium_003.ogg')
+	this.load.audio('damage', 'assets/laserSmall_004.ogg')
 }
 
 let score
@@ -30,12 +31,15 @@ function create() {
 	// create collectables
 	this.ballGroup = this.add.group()
 	this.time.addEvent({
-		delay: 480,
+		delay: 300,
 		callbackScope: this,
 		callback: function () {
-			let value = Math.random() * 7 > 1 ? 1 : -1
-			let ball = new Ball(this, settings.w / 2 - settings.gameArea / 2 + Math.random() * settings.gameArea, 0, value)
-			this.ballGroup.add(ball)
+			let random = Math.random() * 10
+			if(random < 6) {
+				let value = Math.random() * 7 > 1 ? 1 : -1
+				let ball = new Ball(this, settings.w / 2 - settings.gameArea / 2 + Math.random() * settings.gameArea, 0, value)
+				this.ballGroup.add(ball)
+			}
 		},
 		repeat: 100
 	});
@@ -146,9 +150,9 @@ class Bowl extends Phaser.Physics.Arcade.Sprite {
 		}
 
 		score.add(collectable.value)
-		this.scene.sound.play('impact_' + Math.floor(Math.random() * 4));
 
 		if (collectable.value > 0) {
+			this.scene.sound.play('impact_' + Math.floor(Math.random() * 4));
 			let c = this.scene.add.sprite(collectable.x, collectable.y, 'ballP')
 			c.deviation = this.x - collectable.x
 			c.deviationY = Math.random() * 20 + 10
@@ -169,6 +173,7 @@ class Bowl extends Phaser.Physics.Arcade.Sprite {
 				follow: this
 			});
 		} else {
+			this.scene.sound.play('damage');
 			let text = this.scene.add.text(this.x, this.y, collectable.value, { fontSize: '24px', color: collectable.color, align: 'center' });
 			this.scene.physics.world.enable(text)
 			text.setOrigin(0.5)
