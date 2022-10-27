@@ -1,11 +1,11 @@
 class settings {
 	static scale = 1000 / window.innerHeight
 	static h = window.innerHeight * this.scale
-	static w =  window.innerWidth * this.scale
-	static bottom = this.h/4
+	static w = window.innerWidth * this.scale
+	static bottom = this.h / 4
 	static bounce = 40
 	static gameArea = 400 * this.scale
-  }
+}
 
 function preload() {
 	this.load.image('bowl', 'assets/bowl.png');
@@ -28,7 +28,7 @@ function create() {
 		delay: 500,
 		callbackScope: this,
 		callback: function () {
-			let ball = new Ball(this, settings.w / 2 - settings.gameArea/2 + Math.random() * settings.gameArea, 0, 1)
+			let ball = new Ball(this, settings.w / 2 - settings.gameArea / 2 + Math.random() * settings.gameArea, 0, 1)
 			this.ballGroup.add(ball)
 		},
 		repeat: 100
@@ -38,7 +38,7 @@ function create() {
 		delay: 2200,
 		callbackScope: this,
 		callback: function () {
-			let ball = new Ball(this, settings.w / 2 - settings.gameArea/2 + Math.random() * settings.gameArea, 0, -1)
+			let ball = new Ball(this, settings.w / 2 - settings.gameArea / 2 + Math.random() * settings.gameArea, 0, -1)
 			this.ballGroup.add(ball)
 		},
 		repeat: 15
@@ -57,22 +57,25 @@ function create() {
 	score = new Score(this, 50, 50)
 
 	// reset
-	const resetButton = this.add.text(settings.w - 200, 50, 'Reset', { color: '#ffffff' })
-      .setInteractive()
-      .on('pointerdown', () => {
-		this.scene.restart();
-	  });
+	this.add.text(settings.w - 50, 50, 'Reset', { fontSize: '40px', color: '#ffffff' })
+		.setOrigin(1, 0.5)
+		.setInteractive()
+		.on('pointerdown', () => {
+			this.scene.restart();
+		});
 }
 
 function update() {
 }
 
 class Score extends Phaser.GameObjects.Text {
-    constructor(scene, x, y) {
-        super(scene, x, y, 0, { fontSize: '40px', color: '#ffffff', align: 'left' })
+	constructor(scene, x, y) {
+		super(scene, x + 25, y, 0, { fontSize: '40px', color: '#ffffff', align: 'left' })
 		scene.add.existing(this)
+		this.setOrigin(0, 0.5)
+		this.shadow = scene.add.sprite(x, y, 'ballP')
 		this.score = 0
-    }
+	}
 
 	add(addScore) {
 		this.score += addScore
@@ -170,6 +173,7 @@ class Bowl extends Phaser.Physics.Arcade.Sprite {
 		} else {
 			let text = this.scene.add.text(this.x, this.y, collectable.value, { fontSize: '24px', color: collectable.color, align: 'center' });
 			this.scene.physics.world.enable(text)
+			text.setOrigin(0.5)
 			text.body.velocity.y = -350
 			this.scene.time.delayedCall(600, text.destroy, [], text);
 		}
