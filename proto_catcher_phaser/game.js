@@ -1,14 +1,11 @@
-const gameState = {
-	score: 0
-}
-
-const settings = {
-	h: window.innerHeight * (800 / window.innerHeight),
-	w: window.innerWidth * (800 / window.innerHeight),
-	bottom: 200,
-	bounce: 40,
-	gameArea: 400
-}
+class settings {
+	static scale = 1000 / window.innerHeight
+	static h = window.innerHeight * this.scale
+	static w =  window.innerWidth * this.scale
+	static bottom = this.h/4
+	static bounce = 40
+	static gameArea = 400 * this.scale
+  }
 
 function preload() {
 	this.load.image('bowl', 'assets/bowl.png');
@@ -19,7 +16,7 @@ function preload() {
 	this.load.image('shadow', 'assets/shadow.png');
 }
 
-var score
+let score
 
 function create() {
 	let bowl = new Bowl(this)
@@ -57,14 +54,30 @@ function create() {
 	);
 
 	// score
-	score = this.add.text(50,50, gameState.score, { fontSize: '40px', color: '#ffffff', align: 'left' });
+	score = new Score(this, 50, 50)
+
+	// reset
+	const resetButton = this.add.text(settings.w - 200, 50, 'Reset', { color: '#ffffff' })
+      .setInteractive()
+      .on('pointerdown', () => {
+		this.scene.restart();
+	  });
 }
 
 function update() {
-	score.text = gameState.score
 }
 
-function preUpdate(time, delta) {
+class Score extends Phaser.GameObjects.Text {
+    constructor(scene, x, y) {
+        super(scene, x, y, 0, { fontSize: '40px', color: '#ffffff', align: 'left' })
+		scene.add.existing(this)
+		this.score = 0
+    }
+
+	add(addScore) {
+		this.score += addScore
+		this.text = this.score
+	}
 }
 
 
@@ -102,10 +115,6 @@ class Bowl extends Phaser.Physics.Arcade.Sprite {
 		this.collectables = this.scene.add.group()
 	}
 
-	update() {
-
-	}
-
 	preUpdate(time, delta) {
 		super.preUpdate(time, delta)
 
@@ -133,8 +142,8 @@ class Bowl extends Phaser.Physics.Arcade.Sprite {
 	}
 
 	collision(collectable) {
-		gameState.score += collectable.value
-		if (collectable.y > this.y) {
+		score.add(collectable.value)
+		if (collectable.y > this.y - 35) {
 			return
 		}
 
@@ -196,7 +205,6 @@ const config = {
 	scene: {
 		preload,
 		create,
-		preUpdate,
 		update,
 	}
 }
