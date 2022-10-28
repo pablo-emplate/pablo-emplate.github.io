@@ -4,6 +4,7 @@ class settings {
 	static w = window.innerWidth * this.scale
 	static bottom = this.h / 4
 	static bounce = 40
+	static shadowOff = 80
 	static gameArea = 400
 }
 
@@ -27,6 +28,8 @@ let fps
 function create() {
 	let bowl = new Bowl(this)
 	dynamicBackground(this)
+
+
 
 	// create collectables
 	this.ballGroup = this.add.group()
@@ -52,6 +55,15 @@ function create() {
 			bowl.collision(collectable)
 		}
 	);
+
+	//floor
+	let floor = this.add.rectangle(0, settings.h - settings.bottom + settings.shadowOff, 5000, 1, '0x70C1D4');
+	this.physics.world.enable(floor, 1);
+	this.physics.add.collider(floor, this.ballGroup,
+		function (floor, collectable) {
+			collectable.body.setAllowGravity(true)
+			//collectable.body.velocity.x = -40
+		});
 
 	// score
 	score = new Score(this, 50, 50)
@@ -102,6 +114,7 @@ class Ball extends Phaser.Physics.Arcade.Sprite {
 		this.body.moves = true
 		this.body.velocity.y = 550
 		this.setDepth(5)
+		this.setBounce(0, 0.13)
 	}
 }
 
@@ -116,7 +129,7 @@ class Bowl extends Phaser.Physics.Arcade.Sprite {
 		this.setDepth(5)
 
 		//
-		this.shadow = scene.add.sprite(this.x, this.y + 80, 'shadow')
+		this.shadow = scene.add.sprite(this.x, this.y + settings.shadowOff, 'shadow')
 		this.shadow.setDepth(5)
 
 		//
@@ -231,7 +244,7 @@ const config = {
 	physics: {
 		default: 'arcade',
 		arcade: {
-			gravity: { y: 80 },
+			gravity: { y: 180 },
 			enableBody: true,
 			debug: false,
 		}
