@@ -22,6 +22,7 @@ function preload() {
 }
 
 let score
+let fps
 
 function create() {
 	let bowl = new Bowl(this)
@@ -63,9 +64,14 @@ function create() {
 		.on('pointerdown', () => {
 			this.scene.restart();
 		});
+
+	// reset
+	fps = this.add.text(settings.w/2, 50, '', { fontSize: '20px', color: '#ffffff' })
+		.setOrigin(0.5, 0.5)
 }
 
 function update() {
+	fps.text =  Math.floor(game.loop.actualFps) + " fps"
 }
 
 class Score extends Phaser.GameObjects.Text {
