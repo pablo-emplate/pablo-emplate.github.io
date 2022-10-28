@@ -23,9 +23,10 @@ function preload() {
 
 let score
 let fps
+let bowl
 
 function create() {
-	let bowl = new Bowl(this)
+	bowl = new Bowl(this)
 	dynamicBackground(this)
 
 	// create collectables
@@ -71,6 +72,8 @@ function create() {
 
 function update() {
 	fps.text = Math.floor(game.loop.actualFps) + " fps"
+	// temporal solution, need to do it here because pre-update happens before the physics steep
+	bowl.update()
 }
 
 class Score extends Phaser.GameObjects.Text {
@@ -136,13 +139,13 @@ class Bowl extends Phaser.Physics.Arcade.Sprite {
 			});
 		}
 
-		// hacky but tweens dont affect velocity
-		let rotation = parseInt(this.body.position.x - this.prevPosition)
-		this.prevPosition = this.body.position.x
-		this.angle = Math.max(Math.min(rotation, 10), -10)
+		this.angle = Math.max(Math.min(this.body.velocity.x / 80, 20), -20)
 
 		// update attached sprites
 		this.shadow.x = this.x
+	}
+
+	update() {
 		this.collectables.children.each(function (collectable) {
 			collectable.x = this.x - collectable.deviation / 4
 			collectable.y = this.y - collectable.deviationY
