@@ -14,11 +14,11 @@ function preload() {
 	this.load.image('background', 'assets/bg.png');
 	this.load.image('particle', 'assets/particle.png');
 	this.load.image('shadow', 'assets/shadow.png');
-	this.load.audio('impact_0', 'assets/impactGlass_medium_000.ogg')
-	this.load.audio('impact_1', 'assets/impactGlass_medium_001.ogg')
-	this.load.audio('impact_2', 'assets/impactGlass_medium_002.ogg')
-	this.load.audio('impact_3', 'assets/impactGlass_medium_003.ogg')
-	this.load.audio('damage', 'assets/laserSmall_004.ogg')
+	this.load.audio('impact_0', 'assets/impactGlass_medium_000.mp3')
+	this.load.audio('impact_1', 'assets/impactGlass_medium_001.mp3')
+	this.load.audio('impact_2', 'assets/impactGlass_medium_002.mp3')
+	this.load.audio('impact_3', 'assets/impactGlass_medium_003.mp3')
+	this.load.audio('damage', 'assets/laserSmall_004.mp3')
 }
 
 let score
