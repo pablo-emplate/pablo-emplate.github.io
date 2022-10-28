@@ -11,7 +11,7 @@ function preload() {
 	this.load.image('bowl', 'assets/bowl.png');
 	this.load.image('ballP', 'assets/ball_p.png');
 	this.load.image('ballN', 'assets/ball_n.png');
-	this.load.image('background', 'assets/bg.png');
+	//this.load.image('background', 'assets/bg.png');
 	this.load.image('particle', 'assets/particle.png');
 	this.load.image('shadow', 'assets/shadow.png');
 	this.load.audio('impact_0', 'assets/impactGlass_medium_000.mp3')
@@ -26,7 +26,6 @@ let fps
 
 function create() {
 	let bowl = new Bowl(this)
-	//this.add.image(settings.w / 2, settings.h / 2, 'background')
 	dynamicBackground(this)
 
 	// create collectables
@@ -36,7 +35,7 @@ function create() {
 		callbackScope: this,
 		callback: function () {
 			let random = Math.random() * 10
-			if(random < 6) {
+			if (random < 6) {
 				let value = Math.random() * 7 > 1 ? 1 : -1
 				let ball = new Ball(this, settings.w / 2 - settings.gameArea / 2 + Math.random() * settings.gameArea, 0, value)
 				this.ballGroup.add(ball)
@@ -66,12 +65,12 @@ function create() {
 		});
 
 	// reset
-	fps = this.add.text(settings.w/2, 50, '', { fontSize: '20px', color: '#ffffff' })
+	fps = this.add.text(settings.w / 2, 50, '', { fontSize: '20px', color: '#ffffff' })
 		.setOrigin(0.5, 0.5)
 }
 
 function update() {
-	fps.text =  Math.floor(game.loop.actualFps) + " fps"
+	fps.text = Math.floor(game.loop.actualFps) + " fps"
 }
 
 class Score extends Phaser.GameObjects.Text {
@@ -203,7 +202,7 @@ function dynamicBackground(scene) {
 	// terrible mess (prototypeeee)
 	const colors = ['0x41ADC6', '0x70C1D4']
 	let size = 70
-	let numX = Math.floor(settings.gameArea/size)
+	let numX = Math.floor(settings.gameArea / size)
 	let numY = 7
 	let margin = 10
 	let x = settings.w / 2 - (size * numX) / 2 - margin * (numX - 1) / 2
