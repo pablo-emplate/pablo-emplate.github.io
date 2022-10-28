@@ -163,7 +163,7 @@ class Bowl extends Phaser.Physics.Arcade.Sprite {
 			this.scene.sound.play('impact_' + Math.floor(Math.random() * 4));
 			let c = this.scene.add.sprite(collectable.x, collectable.y, 'ballP')
 			c.deviation = this.x - collectable.x
-			c.deviationY = Math.random() * 25 + 10
+			c.deviationY = Math.random() * 22 + 10
 			c.setDepth(4)
 			this.collectables.add(c)
 
