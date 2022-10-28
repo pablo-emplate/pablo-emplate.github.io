@@ -147,7 +147,7 @@ class Bowl extends Phaser.Physics.Arcade.Sprite {
 
 	update() {
 		this.collectables.children.each(function (collectable) {
-			collectable.x = this.x - collectable.deviation / 4
+			collectable.x = this.x - collectable.deviation / 3
 			collectable.y = this.y - collectable.deviationY
 		}, this);
 	}
@@ -163,7 +163,7 @@ class Bowl extends Phaser.Physics.Arcade.Sprite {
 			this.scene.sound.play('impact_' + Math.floor(Math.random() * 4));
 			let c = this.scene.add.sprite(collectable.x, collectable.y, 'ballP')
 			c.deviation = this.x - collectable.x
-			c.deviationY = Math.random() * 20 + 10
+			c.deviationY = Math.random() * 25 + 10
 			c.setDepth(4)
 			this.collectables.add(c)
 
